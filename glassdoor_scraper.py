@@ -30,6 +30,11 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
     #url = 'https://www.glassdoor.com/Job/jobs.htm?sc.keyword="' + keyword + '"&locT=C&locId=1147401&locKeyword=San%20Francisco,%20CA&jobType=all&fromAge=-1&minSalary=0&includeNoSalaryJobs=true&radius=100&cityId=-1&minRating=0.0&industryId=-1&sgocId=-1&seniorityType=all&companyId=-1&employerSizes=0&applicationType=0&remoteWorkType=0'
     driver.get(url)
     jobs = []
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 30<n<60 jobs
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 60<n<90 jobs
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 90<n<120 jobs
 
     while len(jobs) < num_jobs:  #If true, should be still looking for new jobs.
 
@@ -41,7 +46,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
         #Going through each job in this page
         job_buttons = driver.find_elements(By.CLASS_NAME, "JobsList_jobListItem__JBBUV")  #jl for Job Listing. These are the buttons we're going to click.
         company_names = driver.find_elements(By.CLASS_NAME, "EmployerProfile_employerName__8w0tV")
-        ratings = driver.find_elements(By.CLASS_NAME, 'EmployerProfile_ratingContainer__TK35e')
+#        ratings = driver.find_element(By.CLASS_NAME, 'RatingHeadline_sectionRatingScoreLeft__U2fMa')
 
 
         for job_button in job_buttons:  
@@ -55,7 +60,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
             collected_successfully = False
             print("job click worked")
             
-            time.sleep(8)
+            time.sleep(3)
             
             # Test for the "Sign Up" prompt and get rid of it.
             # try:
@@ -90,7 +95,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
                 salary_estimate = -1 #You need to set a "not found value. It's important."
                 
             try:
-                rating = ratings[len(jobs)].text
+                rating = driver.find_element(By.CLASS_NAME, 'RatingHeadline_sectionRatingScoreLeft__U2fMa').text
             except NoSuchElementException:
                 rating = -1 #You need to set a "not found value. It's important."
             
@@ -169,7 +174,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
 
         # Clicking on the "next page" button
         try:
-            driver.find_element(By.CLASS_NAME, 'button_Button__meEg5 button-base_Button__9SPjH').click()
+            driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click()
         except NoSuchElementException:
             print("Scraping terminated before reaching target number of jobs. Needed {}, got {}.".format(num_jobs, len(jobs)))
             break
