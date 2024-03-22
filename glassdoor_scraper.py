@@ -35,12 +35,14 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
     #Or, wait until the webpage is loaded, instead of hardcoding it.
     time.sleep(slp_time)
     
-    #Uncomment for more jobs
-    # driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 30<n<60 jobs
-    # time.sleep(5)
-    # driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 60<n<90 jobs
-    # time.sleep(5)
-    # driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 90<n<120 jobs
+    #Uncomment for more jobs. This clicks the "Show More" button.
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 30<n<60 jobs
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 60<n<90 jobs
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 90<n<120 jobs
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 90<n<120 jobs
 
     #Going through each job in this page ON LEFT COLUMN
     job_buttons = driver.find_elements(By.CLASS_NAME, "JobsList_jobListItem__wjTHv")  #jl for Job Listing. These are the buttons we're going to click.
@@ -48,26 +50,27 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
     locations = driver.find_elements(By.CLASS_NAME, "JobCard_location__rCz3x")
     job_titles = driver.find_elements(By.CLASS_NAME, "JobCard_jobTitle___7I6y")
 
-    print("Job Buttons: " + str(len(job_buttons)))   
+    print("Job Buttons: " + str(len(job_buttons)))   #always an extra. as long as you make sure "Show More" is clicked enough times.
     print("Company names: " + str(len(company_names)))
     print("Locations: " + str(len(locations)))
     print("Job Titles: " + str(len(job_titles)))    
     
+    for company in company_names:
+        print(company.text)
+        
     
     #Getting specific job information or -1 if missing
     for job_button in job_buttons:  
         print("######### Progress: {}".format("" + str(len(jobs)) + "/" + str(num_jobs)))
         if len(jobs) >= num_jobs:
             break
-
+        
         print("1. next job now")
         job_button.click()  #You might 
         time.sleep(3)
         collected_successfully = False
         print("2. gathering deets")
         
-        time.sleep(3)
-
         
         while not collected_successfully:
             try:
@@ -93,7 +96,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
         
         # EXPAND JOB DESCRIPTION         ##################################################
         try:
-            driver.find_element(By.CLASS_NAME, "JobDetails_showMore___Le6L").click()
+            driver.find_element(By.CLASS_NAME, "JobDetails_showMore___Le6L").click() 
             time.sleep(4)
         except:
             time.sleep(4)
@@ -133,70 +136,78 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
         
         try:
             company_overviews = driver.find_elements(By.CLASS_NAME, "JobDetails_overviewItemValue__xn8EF")
-            for x in company_overviews:
-                print(x.text)
+            # debugging
+            # for x in company_overviews:
+            #     print(x.text)
+            try:
+                size = company_overviews[0].text
+            except NoSuchElementException:
+                size = -1
+            
+            try:
+                founded = company_overviews[1].text
+            except NoSuchElementException:
+                founded = -1
+            
+            try:
+                type_of_ownership = company_overviews[2].text
+            except NoSuchElementException:
+                type_of_ownership = -1
+            
+            try:
+                industry = company_overviews[3].text
+            except NoSuchElementException:
+                industry = -1
+            
+            try:
+                sector = company_overviews[4].text
+            except NoSuchElementException:
+                sector = -1
+            
+            try:
+                revenue = company_overviews[5].text
+            except NoSuchElementException:
+                revenue = -1
         except:
-            print("Company overviews failed")
+            print("Company overviews absent##############################################################")
+            size = -1
+            founded = -1
+            type_of_ownership = -1           
+            industry = -1
+            sector = -1
+            revenue = -1
             
-
-        # try:
-        #     size_element = driver.find_element(By.CLASS_NAME, "JobDetails_overviewItemValue__xn8EF")
-        #     size = size_element.text
-        # except NoSuchElementException:
-        #     size = -1
-        
-        # try:
-        #     founded_element = driver.find_element(By.CLASS_NAME, "JobDetails_overviewItemValue__xn8EF")
-        #     founded = founded_element.text
-        # except NoSuchElementException:
-        #     founded = -1
-        
-        # try:
-        #     type_element = driver.find_element(By.CLASS_NAME, "JobDetails_overviewItemValue__xn8EF]")
-        #     type_of_ownership = type_element.text
-        # except NoSuchElementException:
-        #     type_of_ownership = -1
-        
-        # try:
-        #     industry_element = driver.find_element(By.CLASS_NAME, "JobDetails_overviewItemValue__xn8EF")
-        #     industry = industry_element.text
-        # except NoSuchElementException:
-        #     industry = -1
-        
-        # try:
-        #     sector_element = driver.find_element(By.CLASS_NAME, "JobDetails_overviewItemValue__xn8EF")
-        #     sector = sector_element.text
-        # except NoSuchElementException:
-        #     sector = -1
-        
-        # try:
-        #     revenue_element = driver.find_element(By.CLASS_NAME, "JobDetails_overviewItemValue__xn8EF")
-        #     revenue = revenue_element.text
-        # except NoSuchElementException:
-        #     revenue = -1
-
+        # format for company_overviews[] is:
+            # size
+            # founded
+            # type
+            # industry
+            # sector
+            # revenue
             
-        # if verbose:
-        #     print("Size: {}".format(size))
-        #     print("Founded: {}".format(founded))
-        #     print("Type of Ownership: {}".format(type_of_ownership))
-        #     print("Industry: {}".format(industry))
-        #     print("Sector: {}".format(sector))
-        #     print("Revenue: {}".format(revenue))
-        #     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+                    
+            
+        if verbose:
+            print("Size: {}".format(size))
+            print("Founded: {}".format(founded))
+            print("Type of Ownership: {}".format(type_of_ownership))
+            print("Industry: {}".format(industry))
+            print("Sector: {}".format(sector))
+            print("Revenue: {}".format(revenue))
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
         jobs.append({"Job Title" : job_title,
         "Company" : company_name,
         "Salary Estimate" : salary_estimate,
         "Job Description" : job_description,
         "Rating" : rating,
-        "Location" : location
-        # "Size" : size,
-        # "Founded" : founded,
-        # "Type of ownership" : type_of_ownership,
-        # "Industry" : industry,
-        # "Sector" : sector,
-        # "Revenue" : revenue
+        "Location" : location,
+        "Size" : size,
+        "Founded" : founded,
+        "Type of ownership" : type_of_ownership,
+        "Industry" : industry,
+        "Sector" : sector,
+        "Revenue" : revenue
         })
         #add job to jobs
 
