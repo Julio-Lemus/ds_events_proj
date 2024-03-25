@@ -46,18 +46,11 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
 
     #Going through each job in this page ON LEFT COLUMN
     job_buttons = driver.find_elements(By.CLASS_NAME, "JobsList_jobListItem__wjTHv")  #jl for Job Listing. These are the buttons we're going to click.
-    company_names = driver.find_elements(By.CLASS_NAME, "EmployerProfile_compactEmployerName__LE242")
-    locations = driver.find_elements(By.CLASS_NAME, "JobCard_location__rCz3x")
-    job_titles = driver.find_elements(By.CLASS_NAME, "JobCard_jobTitle___7I6y")
-
-    print("Job Buttons: " + str(len(job_buttons)))   #always an extra. as long as you make sure "Show More" is clicked enough times.
-    print("Company names: " + str(len(company_names)))
-    print("Locations: " + str(len(locations)))
-    print("Job Titles: " + str(len(job_titles)))    
+    company_names = driver.find_elements(By.CLASS_NAME, "EmployerProfile_employerInfo__d8uSE")  #jl for Job Listing. These are the buttons we're going to click.
     
-    for company in company_names:
-        print(company.text)
-        
+
+    print("Job Buttons: " + str(len(job_buttons)))   #always an extra. as long as you make sure "Show More" is clicked enough times.  
+    
     
     #Getting specific job information or -1 if missing
     for job_button in job_buttons:  
@@ -72,10 +65,11 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
         print("2. gathering deets")
         
         
+        # GETTING COMPANY NAME, LOCATION, JOB TITLE
         while not collected_successfully:
             try:
                 company_name = company_names[len(jobs)].text
-                location = locations[len(jobs)].text
+                location = driver.find_element(By.CLASS_NAME, "JobDetails_location__mSg5h").text
                 #job_title = locations[len(job_titles)].text
                 
                 try:
@@ -86,6 +80,8 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
                 
                 print("Collected success!")
                 collected_successfully = True
+                
+                #debugging company name, job title, and location
                 print(company_name)
                 print(job_title)
                 print(location)
@@ -97,6 +93,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
         # EXPAND JOB DESCRIPTION         ##################################################
         try:
             driver.find_element(By.CLASS_NAME, "JobDetails_showMore___Le6L").click() 
+            print("Expanding description...")
             time.sleep(4)
         except:
             time.sleep(4)
@@ -107,7 +104,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
             #job_description = driver.find_element(By.CLASS_NAME, "JobDetails_jobDescription__6VeBn.JobDetails_showHidden__trRXQ").text   
         except NoSuchElementException:
             job_description = -1
-            
+                        
         # GETTING SALARY         ##################################################        
         try:
             #salary_estimate = driver.find_element(By.XPATH, "//div[@class='SalaryEstimate_averageEstimate__xF_7h']").text
@@ -169,7 +166,6 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
             except NoSuchElementException:
                 revenue = -1
         except:
-            print("Company overviews absent##############################################################")
             size = -1
             founded = -1
             type_of_ownership = -1           
@@ -185,7 +181,6 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
             # sector
             # revenue
             
-                    
             
         if verbose:
             print("Size: {}".format(size))
@@ -195,11 +190,19 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
             print("Sector: {}".format(sector))
             print("Revenue: {}".format(revenue))
             print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-
+            
+        if company_name in job_description:
+            matches = 1
+        elif location in job_description:
+            matches = 1
+        else:
+            matches = 0
+        
         jobs.append({"Job Title" : job_title,
         "Company" : company_name,
-        "Salary Estimate" : salary_estimate,
         "Job Description" : job_description,
+        "Matches" : matches,
+        "Salary Estimate" : salary_estimate,
         "Rating" : rating,
         "Location" : location,
         "Size" : size,
