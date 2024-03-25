@@ -46,7 +46,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
 
     #Going through each job in this page ON LEFT COLUMN
     job_buttons = driver.find_elements(By.CLASS_NAME, "JobsList_jobListItem__wjTHv")  #jl for Job Listing. These are the buttons we're going to click.
-    company_names = driver.find_elements(By.CLASS_NAME, "EmployerProfile_employerInfo__d8uSE")  #jl for Job Listing. These are the buttons we're going to click.
+    #company_names = driver.find_elements(By.CLASS_NAME, "EmployerProfile_employerInfo__d8uSE")  #jl for Job Listing. These are the buttons we're going to click.
     
 
     print("Job Buttons: " + str(len(job_buttons)))   #always an extra. as long as you make sure "Show More" is clicked enough times.  
@@ -68,7 +68,7 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
         # GETTING COMPANY NAME, LOCATION, JOB TITLE
         while not collected_successfully:
             try:
-                company_name = company_names[len(jobs)].text
+                company_name = driver.find_element(By.CSS_SELECTOR, "h4.heading_Heading__BqX5J.heading_Subhead__Ip1aW").text
                 location = driver.find_element(By.CLASS_NAME, "JobDetails_location__mSg5h").text
                 #job_title = locations[len(job_titles)].text
                 
