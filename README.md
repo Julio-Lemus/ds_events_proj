@@ -74,3 +74,8 @@ The Random Forest model far outperformed the other approaches on the test and va
 
 ## Productionization 
 In this step, I built a flask API endpoint that was hosted on a local webserver by following along with the TDS tutorial in the reference section above. The API endpoint takes in a request with a list of values from a job listing and returns an estimated salary. 
+
+## Future Considerations
+1. Scrape more data - There were only 265 jobs at the time I scrapped the data with many missing data points. This affected the convergance of the modeling. With 30 parameters, I would like to have at least 350 datapoints with good data.
+2. In the tutorial, missing data was left as -1. It would be worth dropping columns, rows, or imputation depending on the total of data missing.
+3. Finally, I would like to see an index.html page set-up for a clean interface that users can just paste in data and recieve an estimate. As of now, new data is found in a file and the estimate is returned via command line.
