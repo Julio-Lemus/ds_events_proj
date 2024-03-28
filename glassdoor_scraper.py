@@ -36,20 +36,29 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
     time.sleep(slp_time)
     
     #Uncomment for more jobs. This clicks the "Show More" button.
-    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 30<n<60 jobs
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() 
     time.sleep(5)
-    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 60<n<90 jobs
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() 
     time.sleep(5)
-    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 90<n<120 jobs
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click()
     time.sleep(5)
-    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() #uncomment for scraping 90<n<120 jobs
-
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() 
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() 
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() 
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() 
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click() 
+    time.sleep(5)
+    driver.find_element(By.XPATH, '//*[@id="left-column"]/div[2]/div/button').click()
+    
     #Going through each job in this page ON LEFT COLUMN
     job_buttons = driver.find_elements(By.CLASS_NAME, "JobsList_jobListItem__wjTHv")  #jl for Job Listing. These are the buttons we're going to click.
-    #company_names = driver.find_elements(By.CLASS_NAME, "EmployerProfile_employerInfo__d8uSE")  #jl for Job Listing. These are the buttons we're going to click.
     
 
-    print("Job Buttons: " + str(len(job_buttons)))   #always an extra. as long as you make sure "Show More" is clicked enough times.  
+    print("Job Buttons: " + str(len(job_buttons)))   # Works as long as you make sure "Show More" is clicked enough times.  
     
     
     #Getting specific job information or -1 if missing
@@ -64,14 +73,11 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
         collected_successfully = False
         print("2. gathering deets")
         
-        
         # GETTING COMPANY NAME, LOCATION, JOB TITLE
         while not collected_successfully:
             try:
                 company_name = driver.find_element(By.CSS_SELECTOR, "h4.heading_Heading__BqX5J.heading_Subhead__Ip1aW").text
-                location = driver.find_element(By.CLASS_NAME, "JobDetails_location__mSg5h").text
-                #job_title = locations[len(job_titles)].text
-                
+                location = driver.find_element(By.CLASS_NAME, "JobDetails_location__mSg5h").text                
                 try:
                     job_title = driver.find_element(By.CLASS_NAME, "heading_Heading__BqX5J.heading_Level1__soLZs").text
                 except NoSuchElementException:
@@ -89,7 +95,6 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
                 print("Collection Failed")
                 time.sleep(3)
         
-        
         # EXPAND JOB DESCRIPTION         ##################################################
         try:
             driver.find_element(By.CLASS_NAME, "JobDetails_showMore___Le6L").click() 
@@ -101,13 +106,11 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
         
         try:
             job_description = driver.find_element(By.CLASS_NAME, "JobDetails_jobDescription__uW_fK.JobDetails_showHidden__C_FOA").text
-            #job_description = driver.find_element(By.CLASS_NAME, "JobDetails_jobDescription__6VeBn.JobDetails_showHidden__trRXQ").text   
         except NoSuchElementException:
             job_description = -1
                         
         # GETTING SALARY         ##################################################        
         try:
-            #salary_estimate = driver.find_element(By.XPATH, "//div[@class='SalaryEstimate_averageEstimate__xF_7h']").text
             salary_estimate = driver.find_element(By.CLASS_NAME, "SalaryEstimate_salaryRange__brHFy").text
         except NoSuchElementException:
             salary_estimate = -1 #You need to set a "not found value. It's important."
@@ -128,7 +131,6 @@ def get_jobs(keyword, num_jobs, verbose, path, slp_time):
             print("Company Name: {}".format(company_name))
             print("Location: {}".format(location))
 
-        #time.sleep(5)
         #Going to the Company tab...
         
         try:
