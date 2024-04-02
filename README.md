@@ -17,21 +17,19 @@
 https://www.youtube.com/playlist?list=PL2zq7klxX5ASFejJj80ob9ZAnBHdz5O1t
 
 ## Web Scraping
-Tweaked the web scraper github repo (above) to scrape 1000 job postings from glassdoor.com. With each job, we got the following:
+Tweaked the web scraper github repo (above) to scrape 250 job postings from glassdoor.com. With each job, we got the following:
 *	Job title
 *	Salary Estimate
 *	Job Description
 *	Rating
 *	Company 
 *	Location
-*	Company Headquarters 
 *	Company Size
 *	Company Founded Date
 *	Type of Ownership 
 *	Industry
 *	Sector
 *	Revenue
-*	Competitors 
 
 ## Data Cleaning
 After scraping the data, I needed to clean it up so that it was usable for our model. I made the following changes and created the following variables:
